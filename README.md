@@ -6,7 +6,12 @@ eine FastAPI-Schnittstelle für Power BI, n8n oder andere Systeme bereitgestellt
 
 Die Demo nutzt ausschließlich synthetische Daten.
 
+[![Tests](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/tests.yml/badge.svg)](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/tests.yml)
+[![Live-Demo](https://img.shields.io/badge/Live--Demo-öffnen-d5ff3f)](https://operations-kpi-automation-demo.vercel.app)
+
 ![Operations KPI Dashboard](demo-preview.png)
+
+**Direkt ausprobieren:** [operations-kpi-automation-demo.vercel.app](https://operations-kpi-automation-demo.vercel.app)
 
 ## Was die Demo zeigt
 
@@ -51,7 +56,7 @@ pytest -q
 ## Power BI
 
 Unter [`powerbi/operations-kpi-query.m`](powerbi/operations-kpi-query.m) liegt
-eine Power-Query-Abfrage für die API. Beispielkennzahlen stehen in
+eine Power-Query-Abfrage für die Live-API. Beispielkennzahlen stehen in
 [`powerbi/measures.dax`](powerbi/measures.dax).
 
 ## n8n

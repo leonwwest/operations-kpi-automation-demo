@@ -1,7 +1,7 @@
 let
     Source = Json.Document(
         Web.Contents(
-            "http://127.0.0.1:8001/api/kpis",
+            "https://operations-kpi-automation-demo.vercel.app/api/kpis",
             [Headers = [Accept = "application/json"]]
         )
     ),
