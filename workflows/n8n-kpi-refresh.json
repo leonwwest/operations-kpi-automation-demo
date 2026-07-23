@@ -1,0 +1,87 @@
+{
+  "name": "Operations KPI Refresh Demo",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8001/api/refresh",
+        "options": {}
+      },
+      "id": "refresh-api",
+      "name": "Refresh KPI API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "check-status",
+      "name": "Refresh Successful?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [740, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "message",
+              "value": "=KPI refresh {{ $json.run_id }} completed. Orders: {{ $json.result.summary.orders }}, on-time: {{ $json.result.summary.on_time_rate }}%.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "prepare-message",
+      "name": "Prepare Status Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [980, 220]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [[{"node": "Refresh KPI API", "type": "main", "index": 0}]]
+    },
+    "Refresh KPI API": {
+      "main": [[{"node": "Refresh Successful?", "type": "main", "index": 0}]]
+    },
+    "Refresh Successful?": {
+      "main": [[{"node": "Prepare Status Message", "type": "main", "index": 0}], []]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7d9c77d0-8fa7-4d83-a2ca-5fb1d09eca5f"
+}

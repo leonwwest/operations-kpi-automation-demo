@@ -1,0 +1,18 @@
+Total Revenue = SUM(Operations[revenue_eur])
+
+Total Orders = SUM(Operations[orders])
+
+Weighted On-Time Rate =
+DIVIDE(
+    SUMX(Operations, Operations[orders] * Operations[on_time_rate]),
+    [Total Orders]
+)
+
+Average Processing Hours =
+DIVIDE(
+    SUMX(Operations, Operations[orders] * Operations[avg_processing_hours]),
+    [Total Orders]
+)
+
+Incident Rate =
+DIVIDE(SUM(Operations[incidents]), [Total Orders])

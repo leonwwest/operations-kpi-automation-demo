@@ -1,0 +1,1 @@
+"""Operations KPI automation demo."""

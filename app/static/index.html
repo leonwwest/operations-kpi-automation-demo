@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Operations KPI Automation Portfolio-Demo mit Python, FastAPI, Power BI und n8n."
+    />
+    <title>Operations KPI · Automation Demo</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="paper-grid" aria-hidden="true"></div>
+    <header class="masthead">
+      <a class="wordmark" href="/" aria-label="Operations KPI Startseite">
+        <span>LW</span>
+        <strong>Operations<br />Automation</strong>
+      </a>
+      <div class="status">
+        <span class="status-dot"></span>
+        <span>Live API · Synthetische Daten</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Portfolio-Demo · Python / API / Power BI / n8n</p>
+          <h1>Aus Rohdaten werden <em>entscheidbare</em> KPIs.</h1>
+        </div>
+        <div class="hero-copy">
+          <p>
+            Ein kleines, klar abgegrenztes Automatisierungspaket: CSV prüfen,
+            Kennzahlen berechnen, per API bereitstellen und in Power BI oder
+            n8n weiterverwenden.
+          </p>
+          <button id="refresh-button" type="button">
+            <span>Pipeline neu ausführen</span>
+            <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="KPI-Übersicht">
+        <article class="metric metric-ink">
+          <span>Aufträge</span>
+          <strong id="orders">–</strong>
+          <small>validierte Datensätze</small>
+        </article>
+        <article class="metric">
+          <span>Umsatz</span>
+          <strong id="revenue">–</strong>
+          <small>synthetisch · EUR</small>
+        </article>
+        <article class="metric">
+          <span>Termintreue</span>
+          <strong id="on-time">–</strong>
+          <small>Zielwert ≥ 95 %</small>
+        </article>
+        <article class="metric metric-signal">
+          <span>Ø Bearbeitung</span>
+          <strong id="processing">–</strong>
+          <small>Stunden je Auftrag</small>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <article class="chart-card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Monatlicher Verlauf</p>
+              <h2>Aufträge & Umsatz</h2>
+            </div>
+            <span id="data-quality">Wird geladen …</span>
+          </div>
+          <div id="month-chart" class="month-chart" aria-label="Monatsdiagramm"></div>
+        </article>
+
+        <aside class="pipeline-card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Automation Run</p>
+              <h2>Pipeline-Protokoll</h2>
+            </div>
+            <span id="run-status" class="run-status">Bereit</span>
+          </div>
+          <ol id="pipeline-steps">
+            <li><span>01</span><div><strong>Extract</strong><small>CSV laden</small></div></li>
+            <li><span>02</span><div><strong>Validate</strong><small>Regeln prüfen</small></div></li>
+            <li><span>03</span><div><strong>Transform</strong><small>KPIs berechnen</small></div></li>
+            <li><span>04</span><div><strong>Publish</strong><small>API aktualisieren</small></div></li>
+          </ol>
+          <div class="connector-strip">
+            <span>CSV</span><b>→</b><span>Python</span><b>→</b><span>API</span><b>→</b><span>Power BI</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="team-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Drilldown</p>
+            <h2>Leistung nach Team</h2>
+          </div>
+          <a href="/docs">API-Dokumentation ↗</a>
+        </div>
+        <div id="team-table" class="team-table" role="table" aria-label="Team-KPIs"></div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Leon Westermeir · Portfolio 2026</span>
+      <span>FastAPI · Power BI-ready · n8n · Tests</span>
+    </footer>
+
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>
