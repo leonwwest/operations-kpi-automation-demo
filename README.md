@@ -13,6 +13,8 @@ Die Demo nutzt ausschließlich synthetische Daten.
 
 **Direkt ausprobieren:** [operations-kpi-automation-demo.vercel.app](https://operations-kpi-automation-demo.vercel.app)
 
+**Kurzer Browser-Rundgang:** [Portfolio-Video ansehen](portfolio-demo.mp4)
+
 ## Was die Demo zeigt
 
 - reproduzierbare CSV-Validierung ohne versteckte manuelle Schritte
