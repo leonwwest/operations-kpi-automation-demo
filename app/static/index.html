@@ -7,7 +7,24 @@
       name="description"
       content="Operations KPI Automation Portfolio-Demo mit Python, FastAPI, Power BI und n8n."
     />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta
+      property="og:title"
+      content="Operations KPI Automation – Python / API / Power BI Demo"
+    />
+    <meta
+      property="og:description"
+      content="CSV-Validierung, KPI-Aggregation mit Python und FastAPI, Power-BI-ready API und n8n-Automation. Live ausprobierbar."
+    />
+    <meta property="og:url" content="https://operations-kpi-automation-demo.vercel.app" />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/leonwwest/operations-kpi-automation-demo/main/demo-preview.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
     <title>Operations KPI · Automation Demo</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
@@ -46,7 +63,7 @@
         <article class="metric metric-ink">
           <span>Aufträge</span>
           <strong id="orders">–</strong>
-          <small>validierte Datensätze</small>
+          <small>validierte Aufträge · 12 Monate</small>
         </article>
         <article class="metric">
           <span>Umsatz</span>
@@ -56,7 +73,7 @@
         <article class="metric">
           <span>Termintreue</span>
           <strong id="on-time">–</strong>
-          <small>Zielwert ≥ 95 %</small>
+          <small>Zielwert ≥ 95 % · <b id="on-time-badge" class="badge">–</b></small>
         </article>
         <article class="metric metric-signal">
           <span>Ø Bearbeitung</span>
@@ -91,6 +108,7 @@
             <li><span>03</span><div><strong>Transform</strong><small>KPIs berechnen</small></div></li>
             <li><span>04</span><div><strong>Publish</strong><small>API aktualisieren</small></div></li>
           </ol>
+          <p id="run-meta" class="run-meta" hidden></p>
           <div class="connector-strip">
             <span>CSV</span><b>→</b><span>Python</span><b>→</b><span>API</span><b>→</b><span>Power BI</span>
           </div>

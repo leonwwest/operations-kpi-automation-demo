@@ -23,6 +23,12 @@ class OperationRow:
     incidents: int
 
 
+@dataclass(frozen=True)
+class ValidationError:
+    line: int
+    message: str
+
+
 def _positive_int(value: str, field: str) -> int:
     parsed = int(value)
     if parsed < 0:
@@ -71,10 +77,20 @@ def parse_row(raw: dict[str, str]) -> OperationRow:
     )
 
 
-def load_rows(path: Path = DATA_FILE) -> list[OperationRow]:
+def load_rows(
+    path: Path = DATA_FILE,
+) -> tuple[list[OperationRow], list[ValidationError]]:
+    """Load rows and quarantine invalid ones instead of aborting the run."""
+    rows: list[OperationRow] = []
+    errors: list[ValidationError] = []
     with path.open(encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
-        return [parse_row(row) for row in reader]
+        for line_number, raw in enumerate(reader, start=2):
+            try:
+                rows.append(parse_row(raw))
+            except ValueError as exc:
+                errors.append(ValidationError(line=line_number, message=str(exc)))
+    return rows, errors
 
 
 def _aggregate(rows: Iterable[OperationRow]) -> dict[str, float | int]:
@@ -94,8 +110,14 @@ def _aggregate(rows: Iterable[OperationRow]) -> dict[str, float | int]:
     }
 
 
-def build_kpis(rows: list[OperationRow] | None = None) -> dict:
-    rows = rows if rows is not None else load_rows()
+def build_kpis(
+    rows: list[OperationRow] | None = None,
+    validation_errors: list[ValidationError] | None = None,
+) -> dict:
+    if rows is None:
+        rows, validation_errors = load_rows()
+    elif validation_errors is None:
+        validation_errors = []
     if not rows:
         raise ValueError("dataset must contain at least one row")
 
@@ -117,7 +139,12 @@ def build_kpis(rows: list[OperationRow] | None = None) -> dict:
         ],
         "quality": {
             "rows_processed": len(rows),
-            "validation_errors": 0,
+            "rows_rejected": len(validation_errors),
+            "validation_errors": len(validation_errors),
+            "validation_messages": [
+                f"line {error.line}: {error.message}"
+                for error in validation_errors[:5]
+            ],
             "source": "data/operations.csv",
             "data_classification": "synthetic",
         },

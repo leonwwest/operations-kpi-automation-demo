@@ -18,11 +18,17 @@ Die Demo nutzt ausschließlich synthetische Daten.
 ## Was die Demo zeigt
 
 - reproduzierbare CSV-Validierung ohne versteckte manuelle Schritte
-- KPI-Berechnung für Aufträge, Umsatz, Termintreue und Bearbeitungszeit
-- REST-API mit Healthcheck, Ergebnisabruf und simuliertem Refresh
-- interaktives Management-Dashboard
+- fehlerhafte Zeilen werden quarantänisiert und im Quality-Block der API
+  gemeldet, statt den Lauf abzubrechen
+  ([`data/operations-broken.csv`](data/operations-broken.csv) zum Ausprobieren)
+- KPI-Berechnung für Aufträge, Umsatz, Termintreue, Bearbeitungszeit und
+  Störungen über 12 Monate und drei Teams
+- REST-API mit typisierten Response-Modellen, Healthcheck, Ergebnisabruf und
+  simuliertem Refresh inkl. Lauf-Protokoll
+- interaktives Management-Dashboard mit Zielwert-Ampel und Trend-Indikator
 - Power-Query-M-Vorlage und DAX-Beispielkennzahlen
-- importierbarer n8n-Workflow für einen automatisierten Refresh
+- importierbarer n8n-Workflow: täglicher Schedule-Trigger, Refresh-Aufruf und
+  getrennte Status-/Fehlermeldung
 - automatisierte Tests und GitHub Actions
 
 ```mermaid
@@ -64,8 +70,9 @@ eine Power-Query-Abfrage für die Live-API. Beispielkennzahlen stehen in
 ## n8n
 
 [`workflows/n8n-kpi-refresh.json`](workflows/n8n-kpi-refresh.json) kann direkt
-in n8n importiert werden. Der Workflow ruft den Refresh-Endpunkt auf, prüft das
-Ergebnis und bereitet eine kompakte Statusmeldung vor.
+in n8n importiert werden. Der Workflow läuft täglich um 06:00 Uhr, ruft den
+Refresh-Endpunkt der Live-Demo auf, prüft das Ergebnis und bereitet je nach
+Ausgang eine kompakte Status- oder Fehlermeldung vor.
 
 ## Abgrenzung
 

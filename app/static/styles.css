@@ -212,6 +212,25 @@ button {
   color: var(--muted);
 }
 
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-ok {
+  color: #1d7a4d;
+  background: rgba(44, 164, 105, 0.16);
+}
+
+.badge-bad {
+  color: var(--signal);
+  background: rgba(255, 91, 54, 0.14);
+}
+
 .metric-ink {
   color: var(--paper);
   background: var(--ink);
@@ -270,7 +289,7 @@ button {
 
 .month-chart {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
   gap: 14px;
   align-items: end;
   min-height: 330px;
@@ -282,7 +301,7 @@ button {
   flex-direction: column;
   justify-content: end;
   min-height: 260px;
-  padding: 18px;
+  padding: 18px 12px;
   border: 1px solid var(--ink);
   border-radius: 16px 16px 0 0;
   background:
@@ -291,7 +310,7 @@ button {
 
 .month strong {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 34px;
+  font-size: clamp(20px, 2vw, 34px);
   font-weight: 400;
 }
 
@@ -357,6 +376,13 @@ button {
   background: #2ca469;
 }
 
+.run-meta {
+  margin: 0 0 8px;
+  color: #aaa89e;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
 .connector-strip {
   display: flex;
   justify-content: space-between;
@@ -382,7 +408,7 @@ button {
 
 .team-row {
   display: grid;
-  grid-template-columns: 1.2fr repeat(4, 1fr);
+  grid-template-columns: 1.2fr repeat(5, 1fr);
   gap: 16px;
   padding: 18px 0;
   border-bottom: 1px solid var(--line);
@@ -446,9 +472,12 @@ footer {
     font-size: 54px;
   }
 
-  .metrics,
-  .month-chart {
+  .metrics {
     grid-template-columns: 1fr;
+  }
+
+  .month-chart {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .metric {
@@ -465,7 +494,8 @@ footer {
   }
 
   .team-row > :nth-child(4),
-  .team-row > :nth-child(5) {
+  .team-row > :nth-child(5),
+  .team-row > :nth-child(6) {
     display: none;
   }
 
