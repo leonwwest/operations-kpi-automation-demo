@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import math
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
@@ -38,6 +39,8 @@ def _positive_int(value: str, field: str) -> int:
 
 def _positive_float(value: str, field: str) -> float:
     parsed = float(value)
+    if not math.isfinite(parsed):
+        raise ValueError(f"{field} must be a finite number")
     if parsed < 0:
         raise ValueError(f"{field} must not be negative")
     return parsed
@@ -56,6 +59,10 @@ def parse_row(raw: dict[str, str]) -> OperationRow:
     missing = required.difference(raw)
     if missing:
         raise ValueError(f"missing columns: {', '.join(sorted(missing))}")
+
+    missing_values = sorted(field for field in required if raw[field] is None)
+    if missing_values:
+        raise ValueError(f"missing values: {', '.join(missing_values)}")
 
     team = raw["team"].strip()
     if not team:

@@ -30,7 +30,8 @@
       "name": "Refresh KPI API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 300]
+      "position": [500, 300],
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -84,7 +85,7 @@
           "assignments": [
             {
               "name": "message",
-              "value": "=KPI refresh failed. Status: {{ $json.status || 'no valid response' }}. Please check the API health endpoint.",
+              "value": "=KPI refresh failed. Reason: {{ $json.error?.message || 'unexpected status: ' + ($json.status || 'no valid response') }}. Please check the API health endpoint.",
               "type": "string"
             }
           ]
@@ -103,7 +104,10 @@
       "main": [[{"node": "Refresh KPI API", "type": "main", "index": 0}]]
     },
     "Refresh KPI API": {
-      "main": [[{"node": "Refresh Successful?", "type": "main", "index": 0}]]
+      "main": [
+        [{"node": "Refresh Successful?", "type": "main", "index": 0}],
+        [{"node": "Prepare Error Message", "type": "main", "index": 0}]
+      ]
     },
     "Refresh Successful?": {
       "main": [

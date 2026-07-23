@@ -18,8 +18,9 @@ Die Demo nutzt ausschließlich synthetische Daten.
 ## Was die Demo zeigt
 
 - reproduzierbare CSV-Validierung ohne versteckte manuelle Schritte
-- fehlerhafte Zeilen werden quarantänisiert und im Quality-Block der API
-  gemeldet, statt den Lauf abzubrechen
+- fehlerhafte Zeilen (u. a. verkürzte Zeilen, NaN/Infinity, Regelverletzungen)
+  werden quarantänisiert und im Quality-Block der API gemeldet, statt den Lauf
+  abzubrechen
   ([`data/operations-broken.csv`](data/operations-broken.csv) zum Ausprobieren)
 - KPI-Berechnung für Aufträge, Umsatz, Termintreue, Bearbeitungszeit und
   Störungen über 12 Monate und drei Teams

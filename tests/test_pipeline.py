@@ -98,6 +98,40 @@ def test_invalid_date_is_rejected() -> None:
         )
 
 
+def test_truncated_row_is_rejected() -> None:
+    with pytest.raises(
+        ValueError,
+        match="missing values: fulfilled_on_time, incidents, processing_hours",
+    ):
+        parse_row(
+            {
+                "date": "2026-06-02",
+                "team": "Central",
+                "orders": "158",
+                "revenue_eur": "24490.00",
+                "fulfilled_on_time": None,
+                "processing_hours": None,
+                "incidents": None,
+            }
+        )
+
+
+@pytest.mark.parametrize("value", ["nan", "inf", "-inf"])
+def test_non_finite_floats_are_rejected(value: str) -> None:
+    with pytest.raises(ValueError, match="must be a finite number"):
+        parse_row(
+            {
+                "date": "2026-01-01",
+                "team": "Demo",
+                "orders": "3",
+                "revenue_eur": value,
+                "fulfilled_on_time": "2",
+                "processing_hours": "2",
+                "incidents": "0",
+            }
+        )
+
+
 def test_invalid_rows_are_quarantined(tmp_path: Path) -> None:
     broken = tmp_path / "broken.csv"
     broken.write_text(
@@ -123,7 +157,10 @@ def test_broken_example_file_is_quarantined() -> None:
     broken = Path(__file__).parent.parent / "data" / "operations-broken.csv"
     rows, errors = load_rows(broken)
     assert len(rows) == 5
-    assert len(errors) == 4
+    assert len(errors) == 7
+    messages = " ".join(error.message for error in errors)
+    assert "missing values" in messages
+    assert "must be a finite number" in messages
 
 
 def test_empty_dataset_is_rejected(tmp_path: Path) -> None:
