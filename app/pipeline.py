@@ -5,10 +5,12 @@ from __future__ import annotations
 import csv
 import math
 from collections import defaultdict
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-from typing import Iterable
+
+from app.data_quality import evaluate_quality
 
 DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "operations.csv"
 
@@ -134,6 +136,8 @@ def build_kpis(
         by_team[row.team].append(row)
         by_month[row.date.strftime("%Y-%m")].append(row)
 
+    quality_gate = evaluate_quality(rows, validation_errors, DATA_FILE)
+
     return {
         "summary": _aggregate(rows),
         "teams": [
@@ -154,5 +158,10 @@ def build_kpis(
             ],
             "source": "data/operations.csv",
             "data_classification": "synthetic",
+            "gate_status": quality_gate["gate_status"],
+            "score": quality_gate["score"],
+            "contract_version": quality_gate["contract_version"],
+            "source_sha256": quality_gate["source_sha256"],
+            "checks": quality_gate["checks"],
         },
     }

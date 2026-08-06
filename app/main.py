@@ -11,7 +11,8 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from app.pipeline import build_kpis, load_rows
+from app.data_quality import build_lineage, evaluate_quality
+from app.pipeline import DATA_FILE, build_kpis, load_rows
 
 STATIC_DIR = Path(__file__).parent / "static"
 
@@ -39,6 +40,11 @@ class QualityMetadata(BaseModel):
     validation_messages: list[str]
     source: str
     data_classification: str
+    gate_status: str
+    score: int
+    contract_version: str
+    source_sha256: str
+    checks: list[dict[str, str]]
 
 
 class KpiResponse(BaseModel):
@@ -93,6 +99,17 @@ def kpis() -> dict:
     return build_kpis()
 
 
+@app.get("/api/quality", tags=["analytics"])
+def quality() -> dict:
+    rows, errors = load_rows()
+    return evaluate_quality(rows, errors, DATA_FILE)
+
+
+@app.get("/api/lineage", tags=["analytics"])
+def lineage() -> dict:
+    return build_lineage(DATA_FILE)
+
+
 @app.post("/api/refresh", tags=["automation"], response_model=RefreshResponse)
 def refresh() -> dict:
     rows, errors = load_rows()
@@ -111,8 +128,11 @@ def refresh() -> dict:
             },
             {
                 "step": "Validate",
-                "status": "ok",
-                "detail": f"{len(rows)} passed, {len(errors)} quarantined",
+                "status": result["quality"]["gate_status"],
+                "detail": (
+                    f"{len(rows)} passed, {len(errors)} quarantined, "
+                    f"quality score {result['quality']['score']}/100"
+                ),
             },
             {
                 "step": "Transform",

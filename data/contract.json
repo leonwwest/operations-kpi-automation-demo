@@ -1,0 +1,23 @@
+{
+  "contract_version": "2.0.0",
+  "dataset": "operations_kpi",
+  "classification": "synthetic",
+  "owner": "operations-analytics",
+  "required_columns": [
+    "date",
+    "team",
+    "orders",
+    "revenue_eur",
+    "fulfilled_on_time",
+    "processing_hours",
+    "incidents"
+  ],
+  "allowed_teams": ["North", "South", "Central"],
+  "unique_key": ["date", "team"],
+  "minimum_rows": 50,
+  "minimum_months": 12,
+  "maximum_rejected_rate_pct": 5.0,
+  "expected_period_end": "2026-06-30",
+  "maximum_period_lag_days": 14
+}
+

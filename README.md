@@ -18,6 +18,9 @@ Die Demo nutzt ausschließlich synthetische Daten.
 ## Was die Demo zeigt
 
 - reproduzierbare CSV-Validierung ohne versteckte manuelle Schritte
+- versionierter Datenvertrag mit Ownership, Business Key und erwarteter Lieferperiode
+- sechsdimensionales Quality Gate für Vollständigkeit, Validität, Eindeutigkeit und Aktualität
+- SHA-256-basierte Source-Evidenz und abrufbare End-to-End-Lineage
 - fehlerhafte Zeilen (u. a. verkürzte Zeilen, NaN/Infinity, Regelverletzungen)
   werden quarantänisiert und im Quality-Block der API gemeldet, statt den Lauf
   abzubrechen
@@ -34,7 +37,8 @@ Die Demo nutzt ausschließlich synthetische Daten.
 
 ```mermaid
 flowchart LR
-    CSV["Synthetische CSV-Daten"] --> PY["Python Validierung & Aggregation"]
+    CSV["Synthetische CSV-Daten"] --> CONTRACT["Datenvertrag & Quality Gate"]
+    CONTRACT --> PY["Python Validierung & Aggregation"]
     PY --> API["FastAPI KPI API"]
     API --> BI["Power BI / Power Query"]
     API --> N8N["n8n Workflow"]
@@ -55,12 +59,23 @@ Danach:
 - Dashboard: http://127.0.0.1:8001
 - API-Dokumentation: http://127.0.0.1:8001/docs
 - KPI-Endpunkt: http://127.0.0.1:8001/api/kpis
+- Quality Gate: http://127.0.0.1:8001/api/quality
+- Lineage: http://127.0.0.1:8001/api/lineage
 
 ## Tests
 
 ```bash
 pytest -q
 ```
+
+## Datenvertrag und Betrieb
+
+- [`data/contract.json`](data/contract.json): versionierter Producer-/Consumer-Vertrag
+- [`docs/data-contract.md`](docs/data-contract.md): Regeln, Dimensionen und Gate-Semantik
+- [`docs/operations-runbook.md`](docs/operations-runbook.md): Refresh, Fehleranalyse und Recovery
+
+Jeder API-Lauf weist Vertragsversion und SHA-256 der Quelldatei aus. Dadurch lässt sich belegen,
+welcher Input zu einem KPI-Ergebnis geführt hat, ohne Rohdaten in Logs zu kopieren.
 
 ## Power BI
 
@@ -77,10 +92,11 @@ Ausgang eine kompakte Status- oder Fehlermeldung vor.
 
 ## Abgrenzung
 
-Die Demo ist ein bewusst kleines, vorführbares Arbeitspaket. In einer
-Produktionsumsetzung würden Datenbank-/ERP-Anbindung, Authentifizierung,
-fachliche KPI-Freigabe, Monitoring und ein abgestimmtes Berechtigungskonzept
-ergänzt.
+Die Demo nutzt weiterhin synthetische CSV-Daten und eine In-Memory-Verarbeitung. Sie zeigt den
+entscheidenden Produktionspfad – Vertrag, Quarantäne, Quality Gate, Lineage und Runbook – ohne
+eine echte ERP-Verbindung vorzutäuschen. In einer Produktionsumsetzung würden persistente
+Run-Metadaten, Authentifizierung, fachliche KPI-Freigabe, Monitoring und ein abgestimmtes
+Berechtigungskonzept ergänzt.
 
 ## Lizenz
 
