@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <rect width="1280" height="640" fill="#0b1717"/>
+  <rect width="12" height="640" fill="#16a085"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <text x="72" y="82" fill="#7f9692" font-size="18" font-weight="600" letter-spacing="2">LEON WESTERMEIR · ENGINEERING PORTFOLIO</text>
+    <text x="72" y="190" fill="#f1f7f6" font-size="56" font-weight="700">Data Quality</text>
+    <text x="72" y="256" fill="#f1f7f6" font-size="56" font-weight="700">Pipeline</text>
+    <text x="72" y="308" fill="#65d7c1" font-size="24">Contracts · Lineage · Operational KPIs</text>
+    <g fill="#112322" stroke="#2c4a45"><rect x="72" y="382" width="106" height="42" rx="8"/><rect x="190" y="382" width="108" height="42" rx="8"/><rect x="310" y="382" width="116" height="42" rx="8"/></g>
+    <g fill="#c8dcd8" font-size="16" font-weight="600"><text x="94" y="409">PYTHON</text><text x="216" y="409">FASTAPI</text><text x="333" y="409">POWER BI</text></g>
+    <text x="72" y="540" fill="#7f9692" font-size="18">Source → contract checks → quality gate → trusted KPI output</text>
+  </g>
+  <g transform="translate(690 164)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <g fill="#102522" stroke="#2d5b52" stroke-width="2"><rect x="0" y="0" width="126" height="88" rx="12"/><rect x="164" y="0" width="126" height="88" rx="12"/><rect x="328" y="0" width="126" height="88" rx="12"/></g>
+    <g fill="#e2eeec" font-size="17" font-weight="600"><text x="37" y="39">Source</text><text x="45" y="64">CSV</text><text x="183" y="39">Contract</text><text x="190" y="64">checks</text><text x="360" y="39">Trusted</text><text x="365" y="64">output</text></g>
+    <g stroke="#16a085" stroke-width="3" fill="none"><path d="M126 44h31"/><path d="M148 35l9 9-9 9"/><path d="M290 44h31"/><path d="M312 35l9 9-9 9"/></g>
+    <rect x="58" y="144" width="338" height="178" rx="14" fill="#10201f" stroke="#2d5b52" stroke-width="2"/>
+    <text x="86" y="181" fill="#7f9692" font-size="14" font-weight="700">QUALITY GATE</text>
+    <g fill="#65d7c1"><circle cx="90" cy="218" r="7"/><circle cx="90" cy="256" r="7"/><circle cx="90" cy="294" r="7"/></g>
+    <g fill="#d5e7e3" font-size="17"><text x="111" y="224">Schema valid</text><text x="111" y="262">Duplicates checked</text><text x="111" y="300">Freshness verified</text></g>
+    <text x="310" y="258" text-anchor="middle" fill="#f1f7f6" font-size="30" font-weight="700">6 / 6</text>
+  </g>
+</svg>

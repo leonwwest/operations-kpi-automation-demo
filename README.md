@@ -9,11 +9,23 @@ Die Demo nutzt ausschließlich synthetische Daten.
 [![Tests](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/tests.yml/badge.svg)](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/tests.yml)
 [![Live-Demo](https://img.shields.io/badge/Live--Demo-öffnen-d5ff3f)](https://operations-kpi-automation-demo.vercel.app)
 
+![Data Quality Pipeline overview](assets/social-preview.svg)
+
 ![Operations KPI Dashboard](demo-preview.png)
 
 **Direkt ausprobieren:** [operations-kpi-automation-demo.vercel.app](https://operations-kpi-automation-demo.vercel.app)
 
 **Kurzer Browser-Rundgang:** [Portfolio-Video ansehen](portfolio-demo.mp4)
+
+## Recruiter-Kurzüberblick
+
+| Frage | Nachweis im Repository |
+|---|---|
+| Was wird automatisiert? | CSV-Validierung, Quality Gate, KPI-Aggregation und API-Bereitstellung |
+| Wie wird Datenqualität belegt? | Versionierter Vertrag, sechs Prüfungen, Quarantäne, SHA-256 und Lineage |
+| Wer konsumiert das Ergebnis? | Live-Dashboard, Power BI/Power Query und ein importierbarer n8n-Workflow |
+| Wie wird es geprüft? | 27 Tests, Ruff und GitHub Actions |
+| Wo sind die Grenzen? | Synthetische Daten und klar dokumentierte Produktionsanforderungen |
 
 ## Was die Demo zeigt
 
