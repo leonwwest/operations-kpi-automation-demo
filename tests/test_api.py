@@ -46,6 +46,7 @@ def test_refresh_endpoint_returns_trace() -> None:
         "Transform",
         "Publish",
     ]
+    assert payload["trace"][1]["status"] == "pass"
 
 
 def test_refresh_result_matches_kpi_endpoint() -> None:
@@ -58,3 +59,24 @@ def test_dashboard_is_served() -> None:
     response = client.get("/")
     assert response.status_code == 200
     assert "Operations KPI" in response.text
+
+
+def test_quality_endpoint_exposes_contract_checks() -> None:
+    response = client.get("/api/quality")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["gate_status"] == "pass"
+    assert payload["contract_version"] == "2.0.0"
+    assert {check["dimension"] for check in payload["checks"]} >= {
+        "completeness",
+        "validity",
+        "uniqueness",
+        "freshness",
+    }
+
+
+def test_lineage_endpoint_connects_source_to_consumer() -> None:
+    payload = client.get("/api/lineage").json()
+    assert payload["nodes"][0]["id"] == "source.operations_csv"
+    assert payload["nodes"][-1]["id"] == "consumer.power_bi"
+    assert len(payload["nodes"][0]["sha256"]) == 64

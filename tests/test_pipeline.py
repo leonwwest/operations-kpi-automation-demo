@@ -29,14 +29,19 @@ def test_kpis_are_aggregated() -> None:
 
 def test_quality_metadata_is_explicit() -> None:
     payload = build_kpis()
-    assert payload["quality"] == {
+    assert {
         "rows_processed": 52,
         "rows_rejected": 0,
         "validation_errors": 0,
         "validation_messages": [],
         "source": "data/operations.csv",
         "data_classification": "synthetic",
-    }
+        "gate_status": "pass",
+        "score": 100,
+        "contract_version": "2.0.0",
+    }.items() <= payload["quality"].items()
+    assert len(payload["quality"]["source_sha256"]) == 64
+    assert len(payload["quality"]["checks"]) == 6
 
 
 def test_fulfilled_orders_cannot_exceed_total() -> None:
@@ -171,3 +176,15 @@ def test_empty_dataset_is_rejected(tmp_path: Path) -> None:
     assert errors == []
     with pytest.raises(ValueError, match="at least one row"):
         build_kpis([])
+
+
+def test_duplicate_date_and_team_fails_quality_gate() -> None:
+    rows, errors = load_rows()
+    payload = build_kpis([*rows, rows[0]], errors)
+    uniqueness = next(
+        check
+        for check in payload["quality"]["checks"]
+        if check["check_id"] == "uniqueness.date_team"
+    )
+    assert payload["quality"]["gate_status"] == "fail"
+    assert uniqueness["status"] == "fail"
