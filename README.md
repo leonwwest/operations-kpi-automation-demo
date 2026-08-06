@@ -7,6 +7,7 @@ eine FastAPI-Schnittstelle für Power BI, n8n oder andere Systeme bereitgestellt
 Die Demo nutzt ausschließlich synthetische Daten.
 
 [![Tests](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/tests.yml/badge.svg)](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/tests.yml)
+[![Security](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/security.yml/badge.svg)](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/security.yml)
 [![Live-Demo](https://img.shields.io/badge/Live--Demo-öffnen-d5ff3f)](https://operations-kpi-automation-demo.vercel.app)
 
 ![Data Quality Pipeline overview](assets/social-preview.svg)
@@ -24,8 +25,14 @@ Die Demo nutzt ausschließlich synthetische Daten.
 | Was wird automatisiert? | CSV-Validierung, Quality Gate, KPI-Aggregation und API-Bereitstellung |
 | Wie wird Datenqualität belegt? | Versionierter Vertrag, sechs Prüfungen, Quarantäne, SHA-256 und Lineage |
 | Wer konsumiert das Ergebnis? | Live-Dashboard, Power BI/Power Query und ein importierbarer n8n-Workflow |
-| Wie wird es geprüft? | 27 Tests, Ruff und GitHub Actions |
+| Wie wird es geprüft? | 27 Tests, sechs reale Quality Checks, CodeQL, Dependency Audit, Trivy und SPDX-SBOM |
 | Wo sind die Grenzen? | Synthetische Daten und klar dokumentierte Produktionsanforderungen |
+
+### Echter Ausführungsnachweis
+
+Die folgende Aufnahme basiert auf der realen `/api/quality`-Antwort und dem echten Testlauf. Sie zeigt den beobachteten Gate-Status, Score und alle sechs Qualitätsprüfungen – keine generierte Dashboard-Attrappe.
+
+![Realer Data-Quality-Lauf](docs/demo.gif)
 
 ## Was die Demo zeigt
 
