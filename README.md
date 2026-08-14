@@ -1,70 +1,71 @@
-# Operations KPI Automation – Python / API / Power BI Demo
+# Operations Data Quality Pipeline
 
-Portfolio-MVP für ein typisches kleines Automatisierungspaket: operative
-CSV-Daten werden validiert, mit Python zu belastbaren KPIs verdichtet und über
-eine FastAPI-Schnittstelle für Power BI, n8n oder andere Systeme bereitgestellt.
-
-Die Demo nutzt ausschließlich synthetische Daten.
+A production-shaped portfolio lab that validates synthetic operations data, calculates management KPIs in Python, and publishes traceable results through FastAPI for Power BI and n8n.
 
 [![Tests](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/tests.yml/badge.svg)](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/tests.yml)
 [![Security](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/security.yml/badge.svg)](https://github.com/leonwwest/operations-kpi-automation-demo/actions/workflows/security.yml)
-[![Live-Demo](https://img.shields.io/badge/Live--Demo-öffnen-d5ff3f)](https://operations-kpi-automation-demo.vercel.app)
+[![Live demo](https://img.shields.io/badge/Live_demo-open-d5ff3f)](https://operations-kpi-automation-demo.vercel.app)
+
+[Live dashboard](https://operations-kpi-automation-demo.vercel.app) · [API documentation](https://operations-kpi-automation-demo.vercel.app/docs) · [Recorded walkthrough](portfolio-demo.mp4)
 
 ![Data Quality Pipeline overview](assets/social-preview.svg)
 
+## 60-second recruiter view
+
+| | Evidence |
+|---|---|
+| **Problem** | Turn operational CSV input into trustworthy, consumable KPIs without silently accepting malformed data. |
+| **Python pipeline** | Schema and business-rule validation, row quarantine, six contract checks, KPI aggregation by team and month. |
+| **API and lineage** | Typed FastAPI responses for KPIs, quality evidence, SHA-256 source lineage, health, and refresh traces. |
+| **Business consumers** | Interactive dashboard, a working Power Query connector, DAX measures, and an importable scheduled n8n workflow. |
+| **Verification** | 27 passing tests plus CodeQL, dependency audit, Trivy scanning, and SPDX SBOM generation in GitHub Actions. |
+| **Scope** | Uses synthetic CSV data and in-memory processing; production gaps are stated explicitly below. |
+
 ![Operations KPI Dashboard](demo-preview.png)
 
-**Direkt ausprobieren:** [operations-kpi-automation-demo.vercel.app](https://operations-kpi-automation-demo.vercel.app)
+## Execution evidence
 
-**Kurzer Browser-Rundgang:** [Portfolio-Video ansehen](portfolio-demo.mp4)
+This recording is driven by the real `/api/quality` response and the repository's test suite. It shows the observed gate status, quality score, and all six checks.
 
-## Recruiter-Kurzüberblick
+![Data-quality run](docs/demo.gif)
 
-| Frage | Nachweis im Repository |
-|---|---|
-| Was wird automatisiert? | CSV-Validierung, Quality Gate, KPI-Aggregation und API-Bereitstellung |
-| Wie wird Datenqualität belegt? | Versionierter Vertrag, sechs Prüfungen, Quarantäne, SHA-256 und Lineage |
-| Wer konsumiert das Ergebnis? | Live-Dashboard, Power BI/Power Query und ein importierbarer n8n-Workflow |
-| Wie wird es geprüft? | 27 Tests, sechs reale Quality Checks, CodeQL, Dependency Audit, Trivy und SPDX-SBOM |
-| Wo sind die Grenzen? | Synthetische Daten und klar dokumentierte Produktionsanforderungen |
+The checked-in broken sample, [`data/operations-broken.csv`](data/operations-broken.csv), exercises quarantine behavior for malformed rows, non-finite values, and business-rule violations.
 
-### Echter Ausführungsnachweis
-
-Die folgende Aufnahme basiert auf der realen `/api/quality`-Antwort und dem echten Testlauf. Sie zeigt den beobachteten Gate-Status, Score und alle sechs Qualitätsprüfungen – keine generierte Dashboard-Attrappe.
-
-![Realer Data-Quality-Lauf](docs/demo.gif)
-
-## Was die Demo zeigt
-
-- reproduzierbare CSV-Validierung ohne versteckte manuelle Schritte
-- versionierter Datenvertrag mit Ownership, Business Key und erwarteter Lieferperiode
-- sechsdimensionales Quality Gate für Vollständigkeit, Validität, Eindeutigkeit und Aktualität
-- SHA-256-basierte Source-Evidenz und abrufbare End-to-End-Lineage
-- fehlerhafte Zeilen (u. a. verkürzte Zeilen, NaN/Infinity, Regelverletzungen)
-  werden quarantänisiert und im Quality-Block der API gemeldet, statt den Lauf
-  abzubrechen
-  ([`data/operations-broken.csv`](data/operations-broken.csv) zum Ausprobieren)
-- KPI-Berechnung für Aufträge, Umsatz, Termintreue, Bearbeitungszeit und
-  Störungen über 12 Monate und drei Teams
-- REST-API mit typisierten Response-Modellen, Healthcheck, Ergebnisabruf und
-  simuliertem Refresh inkl. Lauf-Protokoll
-- interaktives Management-Dashboard mit Zielwert-Ampel und Trend-Indikator
-- Power-Query-M-Vorlage und DAX-Beispielkennzahlen
-- importierbarer n8n-Workflow: täglicher Schedule-Trigger, Refresh-Aufruf und
-  getrennte Status-/Fehlermeldung
-- automatisierte Tests und GitHub Actions
+## Architecture
 
 ```mermaid
 flowchart LR
-    CSV["Synthetische CSV-Daten"] --> CONTRACT["Datenvertrag & Quality Gate"]
-    CONTRACT --> PY["Python Validierung & Aggregation"]
+    CSV["Synthetic CSV data"] --> CONTRACT["Versioned contract and quality gate"]
+    CONTRACT --> PY["Python validation and aggregation"]
     PY --> API["FastAPI KPI API"]
     API --> BI["Power BI / Power Query"]
-    API --> N8N["n8n Workflow"]
-    API --> WEB["Live Dashboard"]
+    API --> N8N["n8n workflow"]
+    API --> WEB["Live dashboard"]
 ```
 
-## Schnellstart
+### What the implementation demonstrates
+
+- **Data quality:** a versioned contract defines ownership, the business key, the reporting period, allowed teams, and thresholds. Six checks cover volume, period coverage, rejected-row rate, uniqueness, domain validity, and freshness.
+- **Failure handling:** invalid rows are quarantined with line-level messages instead of terminating the complete load. The gate result remains visible in every KPI response.
+- **KPI logic:** Python aggregates orders, revenue, on-time rate, weighted processing time, and incidents for the total dataset, three teams, and twelve months.
+- **Traceability:** each run exposes the contract version and SHA-256 of the source file; `/api/lineage` maps the source through validation and aggregation to the API and Power BI consumer.
+- **API design:** FastAPI and Pydantic provide typed models for `/api/kpis` and `/api/refresh`; additional endpoints expose health, quality checks, and lineage.
+- **Automation:** the n8n definition schedules a daily 06:00 refresh, checks the API result, and prepares separate success and failure messages.
+- **Delivery controls:** pull requests run pytest and a security workflow with CodeQL, `pip-audit`, Trivy, and SPDX SBOM generation.
+
+## Evidence map
+
+| Capability | Repository evidence |
+|---|---|
+| Validation and quarantine | [`app/pipeline.py`](app/pipeline.py), [`tests/test_pipeline.py`](tests/test_pipeline.py) |
+| Contract checks and lineage | [`app/data_quality.py`](app/data_quality.py), [`data/contract.json`](data/contract.json), [`docs/data-contract.md`](docs/data-contract.md) |
+| FastAPI endpoints and typed responses | [`app/main.py`](app/main.py), [`tests/test_api.py`](tests/test_api.py) |
+| Power BI integration | [`powerbi/operations-kpi-query.m`](powerbi/operations-kpi-query.m), [`powerbi/measures.dax`](powerbi/measures.dax) |
+| n8n orchestration | [`workflows/n8n-kpi-refresh.json`](workflows/n8n-kpi-refresh.json) |
+| Operational recovery | [`docs/operations-runbook.md`](docs/operations-runbook.md) |
+| CI and supply-chain controls | [Tests workflow](.github/workflows/tests.yml), [Security workflow](.github/workflows/security.yml) |
+
+## Run locally
 
 ```bash
 python3 -m venv .venv
@@ -73,50 +74,23 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8001
 ```
 
-Danach:
+Open the dashboard at `http://127.0.0.1:8001`, the API documentation at `http://127.0.0.1:8001/docs`, or query:
 
-- Dashboard: http://127.0.0.1:8001
-- API-Dokumentation: http://127.0.0.1:8001/docs
-- KPI-Endpunkt: http://127.0.0.1:8001/api/kpis
-- Quality Gate: http://127.0.0.1:8001/api/quality
-- Lineage: http://127.0.0.1:8001/api/lineage
+- `GET /api/kpis`
+- `GET /api/quality`
+- `GET /api/lineage`
+- `POST /api/refresh`
 
-## Tests
+Run the test suite with:
 
 ```bash
 pytest -q
 ```
 
-## Datenvertrag und Betrieb
+## Production boundaries
 
-- [`data/contract.json`](data/contract.json): versionierter Producer-/Consumer-Vertrag
-- [`docs/data-contract.md`](docs/data-contract.md): Regeln, Dimensionen und Gate-Semantik
-- [`docs/operations-runbook.md`](docs/operations-runbook.md): Refresh, Fehleranalyse und Recovery
+This lab intentionally uses synthetic CSV input and in-memory processing; it does not claim a live ERP integration. A production implementation would add persistent run metadata, authentication and authorization, business ownership of KPI definitions, monitoring and alerting, and an agreed release process for contract changes.
 
-Jeder API-Lauf weist Vertragsversion und SHA-256 der Quelldatei aus. Dadurch lässt sich belegen,
-welcher Input zu einem KPI-Ergebnis geführt hat, ohne Rohdaten in Logs zu kopieren.
-
-## Power BI
-
-Unter [`powerbi/operations-kpi-query.m`](powerbi/operations-kpi-query.m) liegt
-eine Power-Query-Abfrage für die Live-API. Beispielkennzahlen stehen in
-[`powerbi/measures.dax`](powerbi/measures.dax).
-
-## n8n
-
-[`workflows/n8n-kpi-refresh.json`](workflows/n8n-kpi-refresh.json) kann direkt
-in n8n importiert werden. Der Workflow läuft täglich um 06:00 Uhr, ruft den
-Refresh-Endpunkt der Live-Demo auf, prüft das Ergebnis und bereitet je nach
-Ausgang eine kompakte Status- oder Fehlermeldung vor.
-
-## Abgrenzung
-
-Die Demo nutzt weiterhin synthetische CSV-Daten und eine In-Memory-Verarbeitung. Sie zeigt den
-entscheidenden Produktionspfad – Vertrag, Quarantäne, Quality Gate, Lineage und Runbook – ohne
-eine echte ERP-Verbindung vorzutäuschen. In einer Produktionsumsetzung würden persistente
-Run-Metadaten, Authentifizierung, fachliche KPI-Freigabe, Monitoring und ein abgestimmtes
-Berechtigungskonzept ergänzt.
-
-## Lizenz
+## License
 
 MIT
